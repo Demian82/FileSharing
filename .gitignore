@@ -1,0 +1,41 @@
+### --- OS (Windows, Linux) --- ###
+.DS_Store
+Thumbs.db
+desktop.ini
+
+### --- Python --- ###
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.py[cod]
+requirements.txt.tmp
+
+### --- Java --- ###
+*.class
+bin/
+*.jar
+*.war
+.metadata/
+.classpath
+.project
+.settings/
+
+### --- C/Cpp --- ###
+*.o
+*.obj
+*.exe
+*.out
+*.app
+build/
+CMakeCache.txt
+CmakerFiles/
+
+### --- VS Code --- ###
+.vscode/
+.idea/
+
+### --- etc --- ###
+backend/shared_files/
+!backend/shared_files/.gitkeep
