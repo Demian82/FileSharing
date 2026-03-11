@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  api-server:
+    build: ./backend
+    # 리눅스 환경에서 Zeroconf 브로드캐스트를 위한 호스트 모드
+    network_mode: "host"
+    volumes:
+      # 호스트의 shared_files 폴더와 컨테이너 내부를 동기화
+      - ./shared_files:/app/shared_files
+    restart: unless-stopped
