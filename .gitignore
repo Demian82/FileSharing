@@ -37,5 +37,5 @@ CmakerFiles/
 .idea/
 
 ### --- etc --- ###
-backend/shared_files/
-!backend/shared_files/.gitkeep
+shared_files/
+!shared_files/.gitkeep
