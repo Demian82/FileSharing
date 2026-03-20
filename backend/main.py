@@ -2,7 +2,8 @@ import socket
 import platform
 import os
 import asyncio
-from fastapi import FastAPI, File, UploadFile, Form
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from zeroconf import IPVersion, ServiceInfo, Zeroconf
 from contextlib import asynccontextmanager
@@ -83,7 +84,44 @@ async def receive_file(file: UploadFile = File(...), sender_os: str = Form(...))
 
     return {"message": "Success", "file": file.filename}
 
+@app.get("/files")
+async def list_files():
+    try:
+        files = os.listdir(UPLOAD_DIR)
+        return {"files": files}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/download/{filename:path}")
+async def download_file(filename: str):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_dir, "shared_files", filename)
+
+    print(f"================ DOWNLOAD DEBUG ================")
+    print(f"1. Requested File name: {filename}")
+    print(f"2. Abspath that server find: {file_path}")
+    print(f"3. File exits: {os.path.exists(os.path.exists(file_path))}")
+    print(f"=================================================")
+
+    if os.path.exists(file_path):
+        return FileResponse(path=file_path, filename=filename)
     
+    raise HTTPException(status_code=404, detail="File not found")
+
+@app.delete("/files/{filename:path}")
+async def delete_file(filename: str):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_dir, "shared_files", filename)
+
+    if os.path.exists(file_path):
+        try:
+            os.remove(file_path)
+            return {"message": f"Succesfully deleted {filename}"}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Failed to dele file: {str(e)}")
+    
+    raise HTTPException(status_code=404, detail="File not found")
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

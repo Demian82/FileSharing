@@ -7,3 +7,8 @@ services:
       # 호스트의 shared_files 폴더와 컨테이너 내부를 동기화
       - ./shared_files:/app/shared_files
     restart: unless-stopped
+
+  web-frontend:
+    build: ./frontend
+    network_mode: "host"
+    restart: unless-stopped
